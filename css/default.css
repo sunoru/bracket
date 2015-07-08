@@ -57,6 +57,10 @@ footer {
     height: 22px;
     margin: 2px 0 2px 0;
     cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .player-bye {
     cursor: default;
@@ -74,7 +78,6 @@ footer {
     height: 100%;
     float: left;
     padding-top: 4px;
-    user-select: none;
 }
 .player-group_id {
     width: 26px;
