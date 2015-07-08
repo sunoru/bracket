@@ -77,6 +77,7 @@ function checkLoaded() {
         var groupdiv = $('<div></div>')
             .attr('id', 'group-'+group)
             .addClass('group-container')
+            .append('<div class="return-top">↑</div>')
             .append('<h3>'+group+' 组（'+data.info[group].description+'）</h3>')
             .append(bracket);
         brackets.append(groupdiv);
@@ -94,6 +95,9 @@ function checkLoaded() {
         });
         popovers.popover();
     });
+    $('.return-top').click(function () {
+        window.scrollTo(0, 0);
+    })
 }
 function loadTurnData(data_url, data_name) {
     $.get(data_url + data_name + '.csv', function(resp, status){

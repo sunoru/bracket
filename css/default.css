@@ -8,6 +8,14 @@ a {
 a:hover {
     color: #ffff00;
 }
+.return-top {
+    height: 21px;
+    margin-top: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    float: left;
+}
 #group-list {
     margin: 10px;
 }
