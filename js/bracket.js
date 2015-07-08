@@ -11,7 +11,7 @@ function loadData() {
     var data_names = ["t1", "t2", "t3", "t4"];
     $.get(data_url + "main.csv",function(data,status){
         var data_tmp = new CSV(data, {
-            header: ["group_id", "signup_id", "baidu_id", "player_id", "friend_code"]
+            header: ["group_id", "signup_id", "baidu_id", "player_id", "friend_code", "online_time"]
         }).parse();
         data["main"] = {};
         for (var i=0; i< data_tmp.length; i++) {
