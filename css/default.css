@@ -8,6 +8,12 @@ a {
 a:hover {
     color: #ffff00;
 }
+footer {
+    margin-left: 20px;
+}
+#main-title {
+    margin-left: 20px;
+}
 .return-top {
     height: 21px;
     margin-top: 5px;
