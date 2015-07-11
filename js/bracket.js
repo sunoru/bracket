@@ -1,26 +1,20 @@
 var mc = null;
 var data = {};
 var q = 0;
-function genDiv(tdata, istop) {
-    var md = $('<div></div>')
-        .attr('id', 'player-'+tdata.signup_id)
-        .addClass('player')
-        .append($('<div></div>')
-            .addClass('player-group_id player-meta')
-            .text(tdata.group_id))
-        .append($('<div></div>')
-            .addClass('player-baidu_id player-meta')
-            .text(tdata.baidu_id))
-        .append($('<div></div>')
-            .addClass('player-tail'));
+var placeholder = null;
+var md = null;
+var maeline = null;
+
+function setPlayer(md, tdata) {
+    md.attr('id', 'player-'+tdata.signup_id);
+    md.find('.player-group_id').text(tdata.group_id);
+    md.find('.player-baidu_id').text(tdata.baidu_id);
     if (tdata.baidu_id!="轮空") {
         var infostr = '报名序号: ' + tdata.signup_id + '<br>' +
             '游戏名称: ' + tdata.player_id + '<br>' +
             'FC: ' + tdata.friend_code + '<br>' +
             '在线时间:' + tdata.online_time;
         md
-            //.attr('data-title', tdata.group_id + ' <a target="_blank" href="http://tieba.baidu.com/home/main/?un=' +
-            //    encodeURI(tdata.baidu_id)+'">'+tdata.baidu_id+'</a>')
             .attr('data-title', tdata.group_id + ' <strong>' +tdata.baidu_id+'</strong>')
             .attr('data-html', true)
             .attr('data-container', 'body')
@@ -28,59 +22,129 @@ function genDiv(tdata, istop) {
             .attr('data-placement', 'top')
             .attr('data-content', infostr);
     } else {
-        md.addClass('player-bye')
+        md.addClass('player-bye');
     }
-
-    if (istop) {
-        md.addClass('player-top');
-    } else {
-        md.addClass('player-bottom');
-    }
-    return md
+    return md;
 }
+function genDiv(istop) {
+    if (istop) {
+        return md.clone().addClass('player-top');
+    }
+    return md.clone().addClass('player-bottom');
+}
+
+var k = 0;
+function genTurn(turn, group) {
+    var tturn = $('<td></td>')
+        .attr('id', 'group-'+group+'-t'+(turn+1))
+        .addClass('bracket-turn');
+    var p = 8 / Math.pow(2, turn);
+    var np = 7;
+    if (turn<4) {
+        np = Math.pow(2, turn) - 1;
+    }
+    for (var j=0; j<p; j++) {
+        var vs = $('<div></div>');
+        for (var i1=0; i1<np; i1++) {
+            vs.append(placeholder.clone());
+        }
+        vs.append(
+            $('<table></table>')
+                .addClass('match')
+                .append('<tr></tr>'));
+        if (turn<3) {
+            if ((j & 1) == 0) {
+                vs.addClass('match-odd');
+            } else {
+                vs.addClass('match-even');
+            }
+        }
+
+        k += 1;
+        var left = null;
+        var right = null;
+        var vsm = vs.find('tr');
+        if (turn>0) {
+            vsm.append(maeline.clone())
+        }
+        if (turn<4) {
+            vsm.append($('<td></td>')
+                .addClass('match-title')
+                .append($('<div>'+k+'</div>')
+                    .attr('id', 'match-m'+(j+1))
+                    .addClass('match-title-href')));
+        }
+        if (turn<4) {
+            vsm.append($('<td></td>')
+                    .addClass('match-players')
+                    .append(left = genDiv(true))
+                    .append(right = genDiv(false)));
+        } else {
+            vsm.append(
+                $('<td></td>')
+                    .addClass('group-champion')
+                    .append(left = md.clone()));
+        }
+
+        if (turn == 0) {
+            setPlayer(left, data.main[group+(j*2+1)]);
+            setPlayer(right, data.main[group+(j*2+2)]);
+        }
+        for (i1=0; i1<np; i1++) {
+            vs.append(placeholder.clone());
+        }
+        tturn.append(vs);
+    }
+    return tturn;
+}
+
+
 function checkLoaded() {
     if (q != 6)
         return;
     var gl = $('#group-list');
     var brackets = $('#brackets');
-    var k = 0;
-    for(var i=0; i<Object.keys(data.info).length; i++) {
+    var lgroup = Object.keys(data.info).length;
+    placeholder = $('<div></div>')
+        .addClass('match-placeholder');
+    md =  $('<div></div>')
+        .addClass('player')
+        .append($('<div></div>')
+            .addClass('player-group_id player-meta'))
+        .append($('<div></div>')
+            .addClass('player-baidu_id player-meta'))
+        .append($('<div></div>')
+            .addClass('player-tail'));
+    maeline = $('<td></td>')
+        .addClass('match-maeline')
+        .append('<div></div>');
+    for (var i=0; i<lgroup; i++) {
         var group = String.fromCharCode(65 + i);
-        gl.append('<a type="button" class="btn btn-info group-button" href="#group-' + group + '">'+ group +' 组</a>');
-        var t1 = $('<td></td>')
-            .attr('id', 'group-'+group+'-t1')
-            .addClass('bracket-turn');
-        for (var j=0; j<8; j++) {
-            var vs = $('<table></table>')
-                .addClass('match')
-                .append('<tr></tr>');
-            k += 1;
-            var vsm = vs.find('tr')
-                .append($('<td></td>')
-                    .addClass('match-title')
-                    .append($('<div>'+k+'</div>')
-                        .attr('id', 'match-'+group+(j+1))
-                        .addClass('match-title-href')))
-                .append($('<td></td>')
-                    .addClass('match-players')
-                    .addClass((j & 1)==0?'match-odd':'match-even')
-                    .append(genDiv(data.main[group+(j*2+1)], true))
-                    .append(genDiv(data.main[group+(j*2+2)], false)));
-            t1.append(vs)
-        }
+        gl.append(
+            $('<a></a>')
+                .attr('type', 'button')
+                .addClass('btn btn-info group-button')
+                .attr('href', '#group-' + group)
+                .text(group +' 组'));
         var bracket = $('<table></table>')
-            .attr('id', 'group-'+group+'-bracket')
-            .addClass('group-bracket')
-            .append('<tr></tr>');
-        var m = bracket.find('tr');
-        m.append(t1);
+            .append($('<tr></tr>')
+                .attr('id', 'group-'+group+'-bracket')
+                .addClass('group-bracket'));
         var groupdiv = $('<div></div>')
             .attr('id', 'group-'+group)
             .addClass('group-container')
-            .append('<div class="return-top">↑</div>')
+            .append($('<div>↑</div>')
+                .addClass('return-top'))
             .append('<h3>'+group+' 组（'+data.info[group].description+'）</h3>')
             .append(bracket);
         brackets.append(groupdiv);
+    }
+    for (var j=0; j<5; j++) {
+        for (i=0; i<lgroup; i++) {
+            group = String.fromCharCode(65 + i);
+            $('#group-'+group+'-bracket')
+                .append(genTurn(j, group));
+        }
     }
 
     $.getScript("http://libs.baidu.com/bootstrap/3.3.4/js/bootstrap.min.js", function () {
@@ -97,7 +161,7 @@ function checkLoaded() {
     });
     $('.return-top').click(function () {
         window.scrollTo(0, 0);
-    })
+    });
 }
 function loadTurnData(data_url, data_name) {
     $.get(data_url + data_name + '.csv', function(resp, status){

@@ -32,14 +32,30 @@ footer {
 }
 .group-container {
     margin: 20px;
+    min-width: 996px;
 }
 .bracket-turn {
+    width: 210px;
+}
+.bracket-turn:nth-child(1) {
     width: 185px;
+}
+.bracket-turn:nth-child(5) {
+    width: 181px;
 }
 .match {
     width: 100%;
     height: 50px;
     font-size: 12px;
+}
+.match-placeholder {
+    width: 100%;
+    height: 25px;
+}
+.match-maeline > div {
+    width: 25px;
+    height: 2px;
+    background-color: #ffffff;
 }
 .match-title {
     width: 29px;
@@ -49,9 +65,13 @@ footer {
 .match-title-href {
     cursor: pointer;
 }
-.match-plaeyrs {
+.match-players, .group-champion {
     width: 156px;
     height: 100%;
+}
+.group-champion:before, .group-champion:after {
+    width: 100%;
+    height: 12px;
 }
 .player {
     width: 100%;
@@ -98,17 +118,21 @@ footer {
     float: left;
     border: #ffffff solid 0;
 }
-.match-odd .player-top .player-tail {
+.player-top .player-tail {
     border-bottom-width: 1px;
 }
-.match-odd .player-bottom .player-tail {
+.player-bottom .player-tail {
     border-top-width: 1px;
+}
+.match-odd .player-bottom .player-tail {
     border-right-width: 2px;
 }
 .match-even .player-top .player-tail {
-    border-bottom-width: 1px;
     border-right-width: 2px;
 }
-.match-even .player-bottom .player-tail {
-    border-top-width: 1px;
+.match-odd .match ~ .match-placeholder, .match-even .match-placeholder {
+    border-right: solid 2px #ffffff;
+}
+.match-even .match ~ .match-placeholder {
+    border-right: none;
 }
