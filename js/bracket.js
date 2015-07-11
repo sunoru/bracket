@@ -106,6 +106,9 @@ function setPlayers() {
         var pdata = data['t' + i];
         for (var j = 0; j < pdata.length; j++) {
             var winner = pdata[j];
+            if (winner.group_id=='') {
+                continue;
+            }
             var group = winner.group_id[0];
             var gid = parseInt(winner.group_id.substr(1));
             var mid = Math.floor((gid + 3) / Math.pow(2, i + 1));
