@@ -111,8 +111,8 @@ function setPlayers() {
             }
             var group = winner.group_id[0];
             var gid = parseInt(winner.group_id.substr(1));
-            var mid = Math.floor((gid + 3) / Math.pow(2, i + 1));
-            var tr = (Math.floor((gid + 1) / Math.pow(2, i)) & 1) == 1;
+            var mid = Math.floor((gid + Math.pow(2,i+1)-1) / Math.pow(2, i + 1));
+            var tr = (Math.floor((gid + Math.pow(2,i)-1) / Math.pow(2, i)) & 1) == 1;
             setPlayer($('#group-' + group + '-t' + (i + 1) + ' .match-m' + mid +
                 (tr ? ' .player-top' : ' .player-bottom')), data.main[winner.group_id]);
         }
