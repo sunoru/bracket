@@ -106,16 +106,21 @@ function setPlayers() {
         var pdata = data['t' + i];
         for (var j = 0; j < pdata.length; j++) {
             var winner = pdata[j];
-            if (winner.group_id=='') {
+            if (winner.group_id == '') {
                 continue;
             }
             var group = winner.group_id[0];
             var gid = parseInt(winner.group_id.substr(1));
-            var mid = Math.floor((gid + Math.pow(2,i+1)-1) / Math.pow(2, i + 1));
-            var tr = (Math.floor((gid + Math.pow(2,i)-1) / Math.pow(2, i)) & 1) == 1;
+            var mid = Math.floor((gid + Math.pow(2, i + 1) - 1) / Math.pow(2, i + 1));
+            var tr = (Math.floor((gid + Math.pow(2, i) - 1) / Math.pow(2, i)) & 1) == 1;
             setPlayer($('#group-' + group + '-t' + (i + 1) + ' .match-m' + mid +
                 (tr ? ' .player-top' : ' .player-bottom')), data.main[winner.group_id]);
         }
+    }
+    for (j = 0; j < data.champion.length; j++) {
+        winner = data.champion[j];
+        group = winner.group_id[0];
+        setPlayer($('#group-' + group + '-t5 .player'), data.main[winner.group_id]);
     }
 }
 
@@ -226,6 +231,7 @@ function loadData() {
             header: ['group_id', 'battle_code_1', 'battle_code_2', 'battle_code_3']
         }).parse();
         q += 1;
+        data['champion'] = data_tmp;
         checkLoaded();
     });
     for (var i = 0; i < data_names.length; i++) {
