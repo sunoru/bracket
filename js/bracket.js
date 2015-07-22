@@ -124,8 +124,95 @@ function setPlayers() {
     }
 }
 
+function setFinals() {
+    if (data.finals[0].length <= 0)
+        return;
+    var bracket_row = $('<tr></tr>')
+        .attr('id', 'finals-bracket')
+        .addClass('group-bracket');
+    var bracket = $('<table></table>')
+        .append(bracket_row);
+
+    for (var turn = 0; turn < 5; turn++) {
+        var tturn = $('<td></td>')
+            .attr('id', 'finals-t' + (turn + 1))
+            .addClass('bracket-turn');
+        var p = 8 / Math.pow(2, turn);
+        var np = 7;
+        if (turn < 4) {
+            np = Math.pow(2, turn) - 1;
+        }
+        for (var j = 0; j < p; j++) {
+            var vs = $('<div></div>');
+            for (var i1 = 0; i1 < np; i1++) {
+                vs.append(placeholder.clone());
+            }
+            vs.append(
+                $('<table></table>')
+                    .addClass('match')
+                    .append('<tr></tr>'));
+            if (turn < 3) {
+                if ((j & 1) == 0) {
+                    vs.addClass('match-odd');
+                } else {
+                    vs.addClass('match-even');
+                }
+            }
+            if (turn < 4) {
+                vs.addClass('match-m' + (j + 1))
+            }
+
+            k += 1;
+            var vsm = vs.find('tr');
+            if (turn > 0) {
+                vsm.append(maeline.clone())
+            }
+            if (turn < 4) {
+                vsm.append($('<td></td>')
+                    .addClass('match-title')
+                    .append($('<div>' + k + '</div>')
+                        .addClass('match-title-href')));
+            }
+            if (turn < 4) {
+                vsm.append($('<td></td>')
+                    .addClass('match-players')
+                    .append(genDiv(true).addClass('finals-t' + (turn + 1) + '-p' + (j * 2 + 1)))
+                    .append(genDiv(false).addClass('finals-t' + (turn + 1) + '-p' + (j * 2 + 2))));
+            } else {
+                vsm.append(
+                    $('<td></td>')
+                        .addClass('group-champion')
+                        .append(md.clone().addClass('finals-t' + (turn + 1) + '-p' + (j * 2 + 1))));
+            }
+            for (i1 = 0; i1 < np; i1++) {
+                vs.append(placeholder.clone());
+            }
+            tturn.append(vs);
+        }
+        bracket_row.append(tturn);
+    }
+
+    $('#finals')
+        .removeClass('hidden-object')
+        .append($('<div></div>')
+            .addClass('group-container')
+            .append(bracket));
+
+    for (var i = 0; i < data.finals.length; i++) {
+        var pdata = data.finals[i];
+        for (j = 0; j < pdata.length; j++) {
+            if (pdata[j] == '') {
+                continue;
+            }
+            var winner = data.main[pdata[j]];
+            setPlayer($('.finals-t' + (i + 1) + '-p' + (j + 1)), winner);
+        }
+    }
+
+}
+
 function checkLoaded() {
-    if (q != 6)
+    if (q != 7)
         return;
     var gl = $('#group-list');
     var brackets = $('#brackets');
@@ -172,6 +259,7 @@ function checkLoaded() {
         }
     }
     setPlayers();
+    setFinals();
     if (location.hash != '') {
         location.href = location.hash;
     }
@@ -192,6 +280,7 @@ function checkLoaded() {
         window.scrollTo(0, 0);
     });
 }
+
 function loadTurnData(data_url, data_name) {
     $.get(data_url + data_name + '.csv', function (resp, status) {
         data[data_name] = new CSV(resp, {
@@ -201,6 +290,7 @@ function loadTurnData(data_url, data_name) {
         checkLoaded();
     });
 }
+
 function loadData() {
     var data_url = 'data/';
     var data_names = ['t1', 't2', 't3'];
@@ -232,6 +322,15 @@ function loadData() {
         }).parse();
         q += 1;
         data['champion'] = data_tmp;
+        checkLoaded();
+    });
+    $.get(data_url + 'finals.txt', function (resp, status) {
+        var data_tmp = resp.split('\n', 4);
+        for (var i = 0; i < data_tmp.length; i++) {
+            data_tmp[i] = data_tmp[i].substr(0, data_tmp[i].length - 1).split(' ');
+        }
+        data['finals'] = data_tmp;
+        q += 1;
         checkLoaded();
     });
     for (var i = 0; i < data_names.length; i++) {

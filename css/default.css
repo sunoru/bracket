@@ -2,23 +2,33 @@ body {
     background-color: #444444;
     color: #ffffff;
 }
+
 a {
     color: #ffff00;
 }
+
 a:hover {
     color: #ffff00;
 }
+
+.hidden-object {
+    display: none;
+}
+
 #main-container {
     margin-top: 5px;
-    min-width: 1100px;
+    min-width: 1120px;
     border: solid 1px #000000;
 }
+
 footer {
     text-align: center;
 }
+
 #main-title {
     margin-left: 20px;
 }
+
 .return-top {
     height: 21px;
     margin-top: 5px;
@@ -27,57 +37,71 @@ footer {
     cursor: pointer;
     float: left;
 }
+
 #group-list {
     margin: 10px;
 }
+
 .group-button {
     margin-right: 10px;
     margin-top: 5px;
     width: 55px;
 }
+
 .group-container {
     margin: 20px;
     min-width: 996px;
 }
+
 .bracket-turn {
     width: 210px;
 }
+
 .bracket-turn:nth-child(1) {
-    width: 185px;
+    width: 175px;
 }
+
 .bracket-turn:nth-child(5) {
     width: 181px;
 }
+
 .match {
     width: 100%;
     height: 50px;
     font-size: 12px;
 }
+
 .match-placeholder {
     width: 100%;
     height: 25px;
 }
+
 .match-maeline > div {
-    width: 25px;
+    width: 35px;
     height: 2px;
     background-color: #ffffff;
 }
+
 .match-title {
     width: 29px;
     height: 100%;
     text-align: center;
 }
+
 .match-title-href {
     cursor: pointer;
 }
+
 .match-players, .group-champion {
-    width: 156px;
+    width: 146px;
     height: 100%;
 }
+
 .group-champion:before, .group-champion:after {
     width: 100%;
     height: 12px;
 }
+
 .player {
     width: 100%;
     height: 22px;
@@ -88,34 +112,42 @@ footer {
     -ms-user-select: none;
     user-select: none;
 }
+
 .player-bye {
     cursor: default;
 }
+
 .popover, .popover-content {
     background-color: #888888;
 }
+
 .popover-title {
     background-color: #777777;
 }
-.popover.top>.arrow:after {
+
+.popover.top > .arrow:after {
     border-top-color: #888888;
 }
+
 .player-meta {
     height: 100%;
     float: left;
     padding-top: 3px;
 }
+
 .player-group_id {
     width: 26px;
     background-color: #888888;
     color: #000000;
     text-align: center;
 }
+
 .player-baidu_id {
-    width: 120px;
+    width: 110px;
     background-color: #222222;
     text-indent: 0.5em;
 }
+
 .player-tail {
     width: 10px;
     height: 26px;
@@ -123,21 +155,65 @@ footer {
     float: left;
     border: #ffffff solid 0;
 }
+
 .player-top .player-tail {
     border-bottom-width: 1px;
 }
+
 .player-bottom .player-tail {
     border-top-width: 1px;
 }
+
 .match-odd .player-bottom .player-tail {
     border-right-width: 2px;
 }
+
 .match-even .player-top .player-tail {
     border-right-width: 2px;
 }
+
 .match-odd .match ~ .match-placeholder, .match-even .match-placeholder {
     border-right: solid 2px #ffffff;
 }
+
 .match-even .match ~ .match-placeholder {
     border-right: none;
+}
+
+.finals-turn, .finals-lines {
+    width: 1120px;
+    height: 22px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.finals-player {
+    float: left;
+    width: 136px;
+    margin: 0 2px;
+}
+
+.finals-placeholder {
+    float: left;
+    height: 22px;
+    width: 70px;
+    margin: 0;
+}
+
+.finals-line-vertical {
+    float: left;
+    width: 70px;
+    height: 22px;
+}
+
+.finals-line-left {
+    border-left: solid 1px #ffffff;
+}
+
+.finals-line-right {
+    border-right: solid 1px #ffffff;
+}
+
+.finals-line-bottom {
+    border-bottom: solid 1px #ffffff;
 }
