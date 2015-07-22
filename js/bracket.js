@@ -281,8 +281,9 @@ function checkLoaded() {
     });
 }
 
+var tms = (new Date()).valueOf();
 function loadTurnData(data_url, data_name) {
-    $.get(data_url + data_name + '.csv', function (resp, status) {
+    $.get(data_url + data_name + '.csv?t=' + tms, function (resp, status) {
         data[data_name] = new CSV(resp, {
             header: ['group_id', 'battle_code']
         }).parse();
@@ -294,7 +295,7 @@ function loadTurnData(data_url, data_name) {
 function loadData() {
     var data_url = 'data/';
     var data_names = ['t1', 't2', 't3'];
-    $.get(data_url + 'main.csv', function (resp, status) {
+    $.get(data_url + 'main.csv?t=' + tms, function (resp, status) {
         var data_tmp = new CSV(resp, {
             header: ['group_id', 'signup_id', 'baidu_id', 'player_id', 'friend_code', 'online_time']
         }).parse();
@@ -305,7 +306,7 @@ function loadData() {
         q += 1;
         checkLoaded();
     });
-    $.get(data_url + 'info.csv', function (resp, status) {
+    $.get(data_url + 'info.csv?t=' + tms, function (resp, status) {
         var data_tmp = new CSV(resp, {
             header: ['group_id', 'description']
         }).parse();
@@ -316,7 +317,7 @@ function loadData() {
         q += 1;
         checkLoaded();
     });
-    $.get(data_url + 'champion.csv', function (resp, status) {
+    $.get(data_url + 'champion.csv?t=' + tms, function (resp, status) {
         var data_tmp = new CSV(resp, {
             header: ['group_id', 'battle_code_1', 'battle_code_2', 'battle_code_3']
         }).parse();
@@ -324,7 +325,7 @@ function loadData() {
         data['champion'] = data_tmp;
         checkLoaded();
     });
-    $.get(data_url + 'finals.txt', function (resp, status) {
+    $.get(data_url + 'finals.txt?t=' + tms, function (resp, status) {
         var data_tmp = resp.split('\n', 4);
         for (var i = 0; i < data_tmp.length; i++) {
             data_tmp[i] = data_tmp[i].substr(0, data_tmp[i].length - 1).split(' ');
