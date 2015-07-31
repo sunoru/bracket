@@ -231,7 +231,6 @@ function setFinals() {
         }
     }
     var tbl = data.info.length * 15;
-    console.log(tbl);
     for (i = 5; i < data.finals.length; i++) {
         if (data.finals[i][0] == '')
             continue;
