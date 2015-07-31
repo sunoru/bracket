@@ -64,7 +64,8 @@ function genTurn(turn, group) {
             vs.addClass('match-m' + (j + 1))
         }
 
-        k += 1;
+        if (turn < 4)
+            k += 1;
         var left = null;
         var right = null;
         var vsm = vs.find('tr');
@@ -115,12 +116,32 @@ function setPlayers() {
             var tr = (Math.floor((gid + Math.pow(2, i) - 1) / Math.pow(2, i)) & 1) == 1;
             setPlayer($('#group-' + group + '-t' + (i + 1) + ' .match-m' + mid +
                 (tr ? ' .player-top' : ' .player-bottom')), data.main[winner.group_id]);
+            if (winner.battle_code) {
+                var mmd = $('#group-' + group + '-t' + i + ' .match-m' + (mid * 2 - tr) + ' .match-title-href');
+                mmd
+                    .attr('data-title', mmd.text())
+                    .attr('data-container', 'body')
+                    .attr('data-toggle', 'popover')
+                    .attr('data-html', true)
+                    .attr('data-placement', 'top')
+                    .attr('data-content', '录像代码：<br>' + winner.battle_code.replace(/ /g, '<br>'));
+            }
         }
     }
     for (j = 0; j < data.champion.length; j++) {
         winner = data.champion[j];
         group = winner.group_id[0];
         setPlayer($('#group-' + group + '-t5 .player'), data.main[winner.group_id]);
+        if (winner.battle_code) {
+            mmd = $('#group-' + group + '-t4 .match-m1 .match-title-href');
+            mmd
+                .attr('data-title', mmd.text())
+                .attr('data-container', 'body')
+                .attr('data-toggle', 'popover')
+                .attr('data-html', true)
+                .attr('data-placement', 'top')
+                .attr('data-content', '录像代码：<br>' + winner.battle_code.replace(/ /g, '<br>'));
+        }
     }
 }
 
@@ -171,7 +192,8 @@ function setFinals() {
                 vsm.append($('<td></td>')
                     .addClass('match-title')
                     .append($('<div>' + k + '</div>')
-                        .addClass('match-title-href')));
+                        .addClass('match-title-href')
+                        .attr('id', 'battle-f' + k)));
             }
             if (turn < 4) {
                 vsm.append($('<td></td>')
@@ -198,7 +220,7 @@ function setFinals() {
             .addClass('group-container')
             .append(bracket));
 
-    for (var i = 0; i < data.finals.length; i++) {
+    for (var i = 0; i < 5; i++) {
         var pdata = data.finals[i];
         for (j = 0; j < pdata.length; j++) {
             if (pdata[j] == '') {
@@ -208,7 +230,20 @@ function setFinals() {
             setPlayer($('.finals-t' + (i + 1) + '-p' + (j + 1)), winner);
         }
     }
-
+    var tbl = data.info.length * 15;
+    console.log(tbl);
+    for (i = 5; i < data.finals.length; i++) {
+        if (data.finals[i][0] == '')
+            continue;
+        var mmd = $('#battle-f' + (tbl + i - 4));
+        mmd
+            .attr('data-title', mmd.text())
+            .attr('data-container', 'body')
+            .attr('data-toggle', 'popover')
+            .attr('data-html', true)
+            .attr('data-placement', 'top')
+            .attr('data-content', '录像代码：<br>' + data.finals[i].join('<br>'));
+    }
 }
 
 function checkLoaded() {
@@ -216,7 +251,6 @@ function checkLoaded() {
         return;
     var gl = $('#group-list');
     var brackets = $('#brackets');
-    var lgroup = Object.keys(data.info).length;
     placeholder = $('<div></div>')
         .addClass('match-placeholder');
     md = $('<div></div>')
@@ -230,7 +264,7 @@ function checkLoaded() {
     maeline = $('<td></td>')
         .addClass('match-maeline')
         .append('<div></div>');
-    for (var i = 0; i < lgroup; i++) {
+    for (var i = 0; i < data.info.length; i++) {
         var group = String.fromCharCode(65 + i);
         gl.append(
             $('<a></a>')
@@ -252,7 +286,7 @@ function checkLoaded() {
         brackets.append(groupdiv);
     }
     for (var j = 0; j < 5; j++) {
-        for (i = 0; i < lgroup; i++) {
+        for (i = 0; i < data.info.length; i++) {
             group = String.fromCharCode(65 + i);
             $('#group-' + group + '-bracket')
                 .append(genTurn(j, group));
@@ -314,19 +348,20 @@ function loadData() {
         for (var i = 0; i < data_tmp.length; i++) {
             data.info[data_tmp[i].group_id] = data_tmp[i];
         }
+        data.info['length'] = data_tmp.length;
         q += 1;
         checkLoaded();
     });
     $.get(data_url + 'champion.csv?t=' + tms, function (resp, status) {
         var data_tmp = new CSV(resp, {
-            header: ['group_id', 'battle_code_1', 'battle_code_2', 'battle_code_3']
+            header: ['group_id', 'battle_code']
         }).parse();
         q += 1;
         data['champion'] = data_tmp;
         checkLoaded();
     });
     $.get(data_url + 'finals.txt?t=' + tms, function (resp, status) {
-        var data_tmp = resp.split('\n', 4);
+        var data_tmp = resp.split('\n', 20);
         for (var i = 0; i < data_tmp.length; i++) {
             data_tmp[i] = data_tmp[i].substr(0, data_tmp[i].length - 1).split(' ');
         }
